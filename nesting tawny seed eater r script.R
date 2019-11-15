@@ -56,6 +56,6 @@ plot(mod,type="s")
 teste=dados=read.table(pipe("pbpaste"), sep="\t", header=T);teste
 par(mar=c(5,7,1,1))
 barplot(teste$RI, main="", horiz=TRUE,
-        names.arg=teste$var,xlab="Relative Varibale Importance",col="black",las=1)
+        names.arg=teste$var,xlab="Relative Varibale Importance",col="black",las=1,xlim=c(0,1))
 
 
