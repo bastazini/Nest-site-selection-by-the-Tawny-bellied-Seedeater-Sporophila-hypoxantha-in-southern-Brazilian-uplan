@@ -11,6 +11,7 @@ require(caret)
 #dados
 dados=read.table(pipe("pbpaste"), sep="\t", header=T);dados
 attach(dados)
+
 #Dados padronizados
 pred=(decostand(cbind(cob.solo,cob.estrat.med,alt.estrat.med,alt.estrat.alt,cob.lat,decliv),"standardize"));pred
 ano=as.factor (ano)
@@ -20,11 +21,14 @@ dados1=cbind(ninho,ano,fogo,amb,pred);dados1
 dados1=as.data.frame(dados1)
 names(dados1)
 #testando maodelos completos(misto com ano,sem ano, linear com ano)
-mod.full=glmer(ninho~cob.solo+cob.estrat.med+alt.estrat.med+alt.estrat.alt+fogo+cob.lat+decliv+(1|ano),family="binomial", data=dados1)
-mod.glm=glm(ninho~cob.solo+cob.estrat.med+alt.estrat.med+alt.estrat.alt+fogo+cob.lat+decliv,family="binomial", data=dados1)
+##modelo com ano como fator aleatorio
+mod.glmm=glmer(ninho~cob.solo+cob.estrat.med+alt.estrat.med+alt.estrat.alt+fogo+cob.lat+decliv+(1|ano),family="binomial", data=dados1)
+#modelo sem ano
+mod.atemporal=glm(ninho~cob.solo+cob.estrat.med+alt.estrat.med+alt.estrat.alt+fogo+cob.lat+decliv,family="binomial", data=dados1)
+#modelo com ano como fator fixo
 mod.ano=glm(ninho~cob.solo+cob.estrat.med+alt.estrat.med+alt.estrat.alt+fogo+cob.lat+decliv+ano,family="binomial", data=dados1)
 
-AICctab(mod.full,mod.glm,mod.ano,nobs=52,weights = TRUE, delta = TRUE, base = TRUE)
+AICctab(mod.glmm,mod.atemporal,mod.ano,nobs=52,weights = TRUE, delta = TRUE, base = TRUE)
 mod.test<-model.sel (mod.full,mod.lm,mod.ano,rank=AIC);mod.test
 av1=model.avg (get.models (mod.test, subset = delta < 2,beta ="none",rank=AIC,fit=T))
 coefTable(av1)
