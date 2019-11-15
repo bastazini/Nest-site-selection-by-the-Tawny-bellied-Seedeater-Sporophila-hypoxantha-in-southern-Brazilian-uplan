@@ -5,20 +5,22 @@ require(lme4)
 require(bbmle)
 require(glmulti)
 require(vegan)
+require(caret)
+
 
 #dados
 dados=read.table(pipe("pbpaste"), sep="\t", header=T);dados
 attach(dados)
 #Dados padronizados
-pred=(decostand(tabela[,c(-1,-2)],"standardize"));pred
-ano1=as.factor (tabela[,2]);ano1
-dados=cbind(densidade,pred)
+pred=(decostand(dados[,c(-1,-2)],"standardize"));pred
+ano1=as.factor (dados[,2]);ano
+dados=cbind()
 dados
 
 #testando maodelos completos(misto com ano,sem ano, linear com ano)
-mod.full=lmer(densidade~precipitacao+temperatura+vento+umidade+(1|ano1),data=tabela)
-mod.lm=lm(densidade~precipitacao+temperatura+vento,data=tabela)
-mod.ano=lm(densidade~precipitacao+temperatura+ano1,data=tabela)
+mod.full=glmer(ninho~cob.solo+cob.estrat.med+alt.estrat.med+alt.estrat.alt+fogo+cob.lat+decliv+(1|ano),family="binomial", data=dados)
+mod.lm=glm(ninho~cob.solo+cob.estrat.med+alt.estrat.med+alt.estrat.alt+fogo+cob.lat+decliv,family="binomial", data=dados)
+mod.ano=glm(ninho~cob.solo+cob.estrat.med+alt.estrat.med+alt.estrat.alt+fogo+cob.lat+decliv+ano,family="binomial", data=dados)
 
 AICctab(mod.full,mod.lm,mod.ano,nobs=14,weights = TRUE, delta = TRUE, base = TRUE)
 mod.test<-model.sel (mod.full,mod.lm,mod.ano,rank=AIC);mod.test
@@ -30,7 +32,7 @@ varImp(mod.full, scale = FALSE)
 #data dredging
 
 
-mod=glmulti(densidade~.,data=dados,family="gaussian",crit=aicc,method="h", level=1)
+mod=glmulti(ninho~.,data=dados,family="binomial",crit=aicc,method="h", level=1)
 coeficientes=coef.glmulti(mod);coeficientes
 summary.glmulti(mod)
 weightable(mod)
