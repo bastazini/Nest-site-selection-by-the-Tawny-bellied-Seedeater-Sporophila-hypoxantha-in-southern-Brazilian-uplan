@@ -16,6 +16,7 @@ pred=(decostand(cbind(cob.solo,cob.estrat.med,alt.estrat.med,alt.estrat.alt,cob.
 pred2=as.factor (cbind(ano,fogo,amb))
 dados1=cbind(ninho,pred,pred2);dados1
 dados1=as.data.frame(dados1)
+
 #testando maodelos completos(misto com ano,sem ano, linear com ano)
 mod.full=glmer(ninho~cob.solo+cob.estrat.med+alt.estrat.med+alt.estrat.alt+fogo+cob.lat+decliv+(1|ano),family="binomial", data=dados1)
 mod.glm=glm(ninho~cob.solo+cob.estrat.med+alt.estrat.med+alt.estrat.alt+fogo+cob.lat+decliv,family="binomial", data=dados1)
