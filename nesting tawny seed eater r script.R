@@ -44,6 +44,7 @@ summary.glmulti(mod)
 weightable(mod)
 plot(mod,type="s")
 
+####Valores de Relative variable importance ( RVI)
 "Burning"= 0.2207641
 "Vegetation density"= 0.3514052
 "Height (higher stratum)"= 0.2326585
@@ -53,8 +54,12 @@ plot(mod,type="s")
 "Height (lower stratum)" = 0.9796466
 "Shrub cover (%)" = 0.9998258 
  
-teste=dados=read.table(pipe("pbpaste"), sep="\t", header=T);teste
+###Barplot  RVI
+##importa os valores das RVI
+teste=read.table(pipe("pbpaste"), sep="\t", header=T);teste
+##especifica as margens do graf
 par(mar=c(5,7,1,1))
+###barplot
 barplot(teste$RI, main="", horiz=TRUE,
         names.arg=teste$var,xlab="Relative Varibale Importance",col="black",las=1,xlim=c(0,1))
 
