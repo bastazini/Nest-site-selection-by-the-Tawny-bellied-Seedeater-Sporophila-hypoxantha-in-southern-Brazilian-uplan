@@ -30,13 +30,14 @@ mod.ano=glm(ninho~cob.solo+cob.estrat.med+alt.estrat.med+alt.estrat.alt+fogo+cob
 
 AICctab(mod.glmm,mod.atemporal,mod.ano,nobs=52,weights = TRUE, delta = TRUE, base = TRUE)
 
+###model average se fosse usar estes modelos
 mod.test<-model.sel (mod.glmm,mod.atemporal,mod.ano,rank=AICc);mod.test
 av1=model.avg (get.models (mod.test, subset = delta < 2,beta ="none",rank=AIC,fit=T))
 coefTable(av1)
 varImp(mod.full, scale = FALSE)
 
 
-#multimodel
+#multimodel inference  and variable importance
 dados2=dados1[,-dados1$ano]
 mod=glmulti(ninho~.,data=dados2,family="binomial",crit=aicc,method="h", confsetsize=256,level=1)
 coeficientes=coef.glmulti(mod);coeficientes
